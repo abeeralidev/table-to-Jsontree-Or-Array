@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<div id="div"></p>
+
+
+<script src="libs/jquery.min.js"></script>
+<script>
+ var jsonarray = [
+    
+    { id: 1, parentId: null, custom: 'Gulberg' },
+    { id: 2, parentId: null, custom: 'Defence' },
+    { id: 3, parentId: 1, custom: 'Gulberg 1' },
+    { id: 4, parentId: 1, custom: 'Gulberg 2' },
+    { id: 5, parentId: 3, custom: 'Saddiq trade center'},
+    { id: 6, parentId: 2, custom: 'Defence 1'},
+    { id: 7, parentId: 2, custom: 'Defence 2'},
+    { id: 8, parentId: null, custom: 'Saddar'},
+    
+]
+var sorted=[];
+
+jsonarray.forEach(function(el){
+	var name = getName(el);
+	sorted.push({id:el.id,name:name});
+})
+
+console.log(sorted);
+function getName(el)
+{
+	var name=el.custom
+	if(el.parentId!=null){
+		jsonarray.forEach(function(parent){
+			if(el.parentId==parent.id){
+				name +=" "+ getName(parent);
+			}
+		})
+	}
+	return name;
+}      
+
+
+</script>
+</body>
+</html>

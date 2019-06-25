@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<div id="div">
+    <svg width="60" height="60" xmlns="http://www.w3.org/2000/svg">
+  <path stroke="#000" transform="rotate(90 28.263423919677738,15.906145095825197) " id="svg_5" d="m10.666645,44.812317l0,-57.812348l35.193557,57.812348l-35.193557,0z" stroke-opacity="null" stroke-width="0" fill="#05b85c"/>
+</svg>
+</div>
+
+
+<script src="libs/jquery.min.js"></script>
+<script>
+
+var jsonarray = [
+    { id: 8, parentId: null, custom: 'Saddar'},
+    { id: 1, parentId: null, custom: 'Gulberg' },
+    { id: 2, parentId: null, custom: 'Defence' },
+    { id: 3, parentId: 1, custom: 'Gulberg 1' },
+    { id: 4, parentId: 1, custom: 'Gulberg 2' },
+    { id: 5, parentId: 3, custom: 'Saddiq trade center'},
+    { id: 6, parentId: 2, custom: 'Defence 1'},
+    { id: 7, parentId: 2, custom: 'Defence 2'},
+    
+]
+
+var parse = arrayToTree(jsonarray);
+console.log(parse);
+
+function recursive(object, node) {
+    var list = document.createElement("ul");
+    for (let child of object.children) {
+        var item = document.createElement("li");
+        item.innerHTML = child.name;
+        item.setAttribute('type', child.type);
+        if (typeof(child.children) == "object") {
+            recursive(child, item);
+        }
+        list.appendChild(item);
+    }
+    if (list.parentElement != null) {
+        item.appendChild(list);
+    }
+    node.appendChild(list);
+}
+function arrayToTree(items, config) {
+    if (config === void 0) { config = { id: 'id', parentId: 'parentId' }; }
+    // the resulting unflattened tree
+    var rootItems = [];
+    // stores all already processed items with ther ids as key so we can easily look them up
+    var lookup = {};
+    // idea of this loop:
+    // whenever an item has a parent, but the parent is not yet in the lookup object, we store a preliminary parent
+    // in the lookup object and fill it with the data of the parent later
+    // if an item has no parentId, add it as a root element to rootItems
+    for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
+        var item = items_1[_i];
+        var itemId = item[config.id];
+        var parentId = item[config.parentId];
+        // look whether item already exists in the lookup table
+        if (!Object.prototype.hasOwnProperty.call(lookup, itemId)) {
+            // item is not yet there, so add a preliminary item (its data will be added later)
+            lookup[itemId] = { data: null, children: [] };
+        }
+        // add the current item's data to the item in the lookup table
+        lookup[itemId].data = item;
+        var TreeItem = lookup[itemId];
+        if (parentId === null) {
+            // is a root item
+            rootItems.push(TreeItem);
+        }
+        else {
+            // has a parent
+            // look whether the parent already exists in the lookup table
+            if (!Object.prototype.hasOwnProperty.call(lookup, parentId)) {
+                // parent is not yet there, so add a preliminary parent (its data will be added later)
+                lookup[parentId] = { data: null, children: [] };
+            }
+            // add the current item to the parent
+            lookup[parentId].children.push(TreeItem);
+        }
+    }
+    return rootItems;
+}
+
+</script>
+</body>
+</html>

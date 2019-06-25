@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+<div id="div"></p>
+
+
+<script src="libs/jquery.min.js"></script>
+<script>
+  menu = [
+    {name: 'Saddar',children: null},
+        {name: 'Defence',children: [
+            {name: 'Defence a', children: null},
+            {name: 'Defence b', children: null}
+            ]
+        },
+        {name: 'Gulberg',children: [
+            {name: 'Gulberg 1', children: null},
+            {name: 'Gulberg 2', children: [
+                {name: 'Saddiq Trade Center', children: null}
+            ]},
+            ]
+        }
+    ];
+
+        
+function makeUL(lst) {
+    var html = [];                
+    html.push('<ul>');
+    $(lst).each(function() { html.push(makeLI(this)) });
+    html.push('</ul>');      
+    return html.join("\n");
+}
+                
+function makeLI(elem) {
+    var html = [];                
+    html.push('<li>');
+    html.push(elem.name);
+    if (elem.children)
+        html.push('<div>' + makeUL(elem.children) + '</div>');
+    html.push('</li>');
+    return html.join("\n");
+}
+
+$(function() {
+    $("body").html(makeUL(menu));
+})      
+
+
+</script>
+</body>
+</html>
